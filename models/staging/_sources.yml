@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: raw
+    database: food_delivery_db
+    schema: raw
+    tables:
+      - name: orders_raw
+        description: "Real Zomato-style order export, Delhi NCR, Sep 2024–Jan 2025. Contains injected data quality issues — see stg_orders for cleaning logic."
+      - name: restaurants_dim
+        description: "Deduplicated restaurant dimension. Deliberately missing 2 restaurant_ids present in orders_raw, to simulate orphaned foreign keys."
+      - name: delivery_partners_dim
+        description: "Fully synthetic delivery partner dimension — source data has no partner identity at all."
+      - name: delivery_ops_fact
+        description: "Fully synthetic delivery ops fact table (derived SLA/lateness). Grain is (order_id, partner_id), not order_id alone — see stg_delivery_ops."
