@@ -1,10 +1,12 @@
 # Food Delivery Analytics — End-to-End SQL Project
 
-A simulated data-warehouse engagement for a food delivery platform, built on **real order data** (21,321 orders, Delhi NCR, Sep 2024–Jan 2025) with a documented synthetic delivery-ops layer, run for two stakeholders end to end: business objective → data cleaning → diagnosis → root cause → quantified recommendation → ongoing KPIs.
+A simulated data-warehouse engagement for a food delivery platform, built on **real order data** (21,321 orders, Delhi NCR, Sep 2024–Jan 2025, extended to 48,864 orders / 12 months) with a documented synthetic delivery-ops layer, run for two stakeholders end to end: business objective → data cleaning → diagnosis → root cause → quantified recommendation → ongoing KPIs.
 
-**Stack:** Snowflake (warehouse) · dbt (staging models) · Python (synthetic data generation) · Power BI (dashboard, in progress)
+**Stack:** Snowflake → **migrated to PostgreSQL** (trial expiry) · dbt (staging models, Snowflake-era) · Python (synthetic data generation) · Power BI (dashboard, in progress)
 
 📄 **[Full Project Charter (PDF)](docs/Food_Delivery_Project_Charter.pdf)** — stakeholder briefs, every finding, Amazon Leadership Principles mapping, and the general analysis framework used throughout.
+
+**⚠️ Note on `sql/` vs `postgres_sql/`:** the project started on Snowflake (`sql/`) and was migrated to Postgres (`postgres_sql/`) after the Snowflake trial expired. Both are kept — the migration itself is a legitimate part of the project, demonstrating translation of Snowflake-specific syntax (`COUNT_IF`→`FILTER(WHERE...)`, `SELECT * EXCLUDE()`→explicit columns, `DATEDIFF()`→manual `EXTRACT` math) with every query cross-verified against the original results. **`postgres_sql/` is the current, actively maintained version**, running on the full 12-month extended dataset.
 
 ---
 
@@ -25,12 +27,15 @@ A simulated data-warehouse engagement for a food delivery platform, built on **r
 ## Repo structure
 
 ```
-sql/       Final, verified analysis queries — one file per stakeholder per theme,
-           each with the finding written as a SQL comment block
-scripts/   Python: synthetic data generation (reproducible, seeded) + Snowflake DDL
-data/      Source CSVs (raw + 12-month extension batch)
-docs/      Data dictionary (what's real vs. synthetic, and why) + full project charter
-models/    dbt staging models (stg_orders, stg_delivery_ops)
+sql/            Snowflake-era analysis queries (original, 5-month dataset)
+postgres_sql/   CURRENT — Postgres translations, verified, 12-month dataset,
+                includes migration notes and 2 new findings only visible
+                with more data (DP0044 outlier, shahdara zone concern — both
+                flagged as open investigations, not yet resolved)
+scripts/        Python: synthetic data generation (reproducible, seeded) + Snowflake DDL
+data/           Source CSVs (raw + 12-month extension batch)
+docs/           Data dictionary (what's real vs. synthetic, and why) + full project charter
+models/         dbt staging models (Snowflake-era, kept for reference)
 ```
 
 ## Data note
@@ -39,4 +44,4 @@ The order data is real. The delivery-partner identity, SLA promise, and lateness
 
 ## Status
 
-Both stakeholders' full analysis, findings, and ongoing KPI dashboards are complete (13 KPIs total). Power BI live-connected dashboard in progress.
+Both stakeholders' full analysis, findings, and ongoing KPI dashboards are complete (13 KPIs total), migrated and re-verified on Postgres after the Snowflake trial expired. Two new findings emerged from the 12-month extension and are under active investigation: a possible 5th outlier delivery partner (DP0044) and a possible emerging zone issue (shahdara). Power BI dashboard in progress (Snowflake connection previously proven via DirectQuery; reconnecting to Postgres).
