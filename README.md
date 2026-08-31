@@ -18,6 +18,22 @@ A simulated data-warehouse engagement for a food delivery platform, built on **r
 | **Techniques** | Cohort retention, RFM segmentation, look-ahead-bias correction, threshold sensitivity testing | Root-cause breakdown, counterfactual impact projection, 2-SD outlier detection with self-contamination check, confound control |
 | **Headline finding** | Discount status at first order does **not** predict retention — an earlier version showing it did was traced to look-ahead bias and discarded | DP0041 handles 30–45% of orders in nearly every zone, every month, for a full year — a platform-wide resilience risk, not an isolated issue |
 
+## Dashboard Preview
+
+Live-connected Power BI dashboard (DirectQuery → Supabase), 4 pages, 12 visuals total.
+
+### Retention & Growth — Diagnostics
+![Retention diagnostics](dashboard_previews/dashboard_retention_diagnostics.png)
+
+### Retention & Growth — Trends
+![Retention trends](dashboard_previews/dashboard_retention_trends.png)
+
+### Delivery Operations — Health
+![Operations health](dashboard_previews/dashboard_ops_health.png)
+
+### Delivery Operations — Root Cause & Risk
+![Operations root cause](dashboard_previews/dashboard_ops_root_cause.png)
+
 ## What's actually interesting here (not just what's in the tables)
 
 - **A wrong finding was caught and corrected in public.** The first version of the promo-dependency analysis showed a large, clean gap — it was wrong, built on a look-ahead bias (using future orders to explain past retention). The corrected version is in the repo, with the discarded version documented as a lesson, not hidden.
