@@ -34,6 +34,22 @@ Live-connected Power BI dashboard (DirectQuery → Supabase), 4 pages, 12 visual
 ### Delivery Operations — Root Cause & Risk
 ![Operations root cause](dashboard_previews/dashboard_ops_root_cause.png)
 
+
+## Findings Summary
+
+| Finding | Key Number | Status |
+|---|---|---|
+| Month-1 retention drop | 25.59% → 15.36% (Sep–Dec cohorts) | 📉 Real, confirmed trend |
+| Discount status at first order → retention | 1–5pp gap, inconsistent direction | ✅ No meaningful effect |
+| Promo-dependent revenue share | 38–53% (threshold-sensitive range) | ⚠️ Report as range, not a point estimate |
+| Revenue concentration within promo segment | Top 10% of spenders = 30.78% of segment revenue | ⚠️ Concentrated, not broad-based |
+| RFM segments (12-month) | Other 21.0K · Loyal 1.9K · Churned 1.2K · At-risk 1.2K · Champions 1.1K | ℹ️ Snapshot, re-check quarterly |
+| Restaurant brand late rate | dilli burger adda 16.2% · tandoori junction 14.7% vs. 2.8–9.5% others | 🚨 Unresolved, brand-wide, 12 months |
+| Partner outlier detection | 4 partners at 44–56% late; 5th (DP0044) at 12.68% | 🚨 Escalate 4 · 👁️ Watch 1 |
+| DLF Phase 1 short-distance late rate | 34.55% → 12–14% (Sep–Aug) | ⚠️ Improving, not resolved |
+| Partner concentration (DP0041) | 35–39% share in 70+ of 76 zone-months | 🚨 Highest-urgency finding in project |
+| Shahdara zone concern | Small-sample noise (19 of 22 month-bands low-volume) | ✅ Resolved — no action needed |
+
 ## What's actually interesting here (not just what's in the tables)
 
 - **A wrong finding was caught and corrected in public.** The first version of the promo-dependency analysis showed a large, clean gap — it was wrong, built on a look-ahead bias (using future orders to explain past retention). The corrected version is in the repo, with the discarded version documented as a lesson, not hidden.
@@ -43,15 +59,19 @@ Live-connected Power BI dashboard (DirectQuery → Supabase), 4 pages, 12 visual
 ## Repo structure
 
 ```
-sql/            Snowflake-era analysis queries (original, 5-month dataset)
-postgres_sql/   CURRENT — Postgres translations, verified, 12-month dataset,
-                includes migration notes and 2 new findings only visible
-                with more data (DP0044 outlier, shahdara zone concern — both
-                flagged as open investigations, not yet resolved)
-scripts/        Python: synthetic data generation (reproducible, seeded) + Snowflake DDL
-data/           Source CSVs (raw + 12-month extension batch)
-docs/           Data dictionary (what's real vs. synthetic, and why) + full project charter
-models/         dbt staging models (Snowflake-era, kept for reference)
+sql/               Snowflake-era analysis queries (original, 5-month dataset)
+postgres_sql/      CURRENT — Postgres translations, verified, 12-month dataset.
+                   Includes migration notes + 2 findings that only surfaced with
+                   more data: DP0044 (resolved — persistent mild outlier, added
+                   to watch list) and shahdara (resolved — small-sample noise,
+                   no action needed). File 07 documents the view→table
+                   materialization fix and every marts view behind the dashboard.
+scripts/           Python: synthetic data generation (reproducible, seeded) + Snowflake DDL
+data/              Source CSVs (raw + 12-month extension batch)
+docs/              Data dictionary (what's real vs. synthetic, and why) + full project charter
+dashboard_previews/ Screenshots of all 4 live Power BI dashboard pages
+models/            dbt staging models (Snowflake-era, kept for reference)
+```
 ```
 
 ## Data note
